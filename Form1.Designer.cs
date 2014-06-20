@@ -45,8 +45,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.button_area = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox_second = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.textBox_second = new System.Windows.Forms.TextBox();
             this.button_start = new System.Windows.Forms.Button();
             this.button_capture = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -86,7 +86,7 @@
             this.groupBox_file.Size = new System.Drawing.Size(336, 77);
             this.groupBox_file.TabIndex = 3;
             this.groupBox_file.TabStop = false;
-            this.groupBox_file.Text = "挿入先ファイル";
+            this.groupBox_file.Text = "出力ファイル";
             // 
             // button_clear
             // 
@@ -192,6 +192,7 @@
             this.button_area.TabIndex = 0;
             this.button_area.Text = "範囲選択";
             this.button_area.UseVisualStyleBackColor = true;
+            this.button_area.Click += new System.EventHandler(this.button_area_Click);
             // 
             // groupBox1
             // 
@@ -205,14 +206,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "連続キャプチャ";
             // 
-            // textBox_second
-            // 
-            this.textBox_second.Location = new System.Drawing.Point(6, 19);
-            this.textBox_second.Name = "textBox_second";
-            this.textBox_second.Size = new System.Drawing.Size(63, 25);
-            this.textBox_second.TabIndex = 0;
-            this.textBox_second.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_second_Validating);
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -221,6 +214,14 @@
             this.label5.Size = new System.Drawing.Size(44, 18);
             this.label5.TabIndex = 1;
             this.label5.Text = "秒ごと";
+            // 
+            // textBox_second
+            // 
+            this.textBox_second.Location = new System.Drawing.Point(6, 19);
+            this.textBox_second.Name = "textBox_second";
+            this.textBox_second.Size = new System.Drawing.Size(63, 25);
+            this.textBox_second.TabIndex = 0;
+            this.textBox_second.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_second_Validating);
             // 
             // button_start
             // 
@@ -231,6 +232,7 @@
             this.button_start.TabIndex = 6;
             this.button_start.Text = "連キャプ開始";
             this.button_start.UseVisualStyleBackColor = true;
+            this.button_start.Click += new System.EventHandler(this.button_start_Click);
             // 
             // button_capture
             // 
@@ -242,6 +244,10 @@
             this.button_capture.Text = "即キャプ";
             this.button_capture.UseVisualStyleBackColor = true;
             this.button_capture.Click += new System.EventHandler(this.button_capture_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // menuStrip1
             // 
@@ -299,13 +305,9 @@
         private System.Windows.Forms.GroupBox groupBox_file;
         private System.Windows.Forms.Button button_clear;
         private System.Windows.Forms.GroupBox groupBox_size;
-        private System.Windows.Forms.TextBox textBox_Y;
-        private System.Windows.Forms.TextBox textBox_X;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button_area;
-        private System.Windows.Forms.TextBox textBox_height;
-        private System.Windows.Forms.TextBox textBox_width;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -316,6 +318,10 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem バージョンToolStripMenuItem;
+        internal System.Windows.Forms.TextBox textBox_Y;
+        internal System.Windows.Forms.TextBox textBox_X;
+        internal System.Windows.Forms.TextBox textBox_height;
+        internal System.Windows.Forms.TextBox textBox_width;
     }
 }
 

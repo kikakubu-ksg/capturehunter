@@ -15,6 +15,7 @@ namespace capturehunter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new AreaCapture());
             Application.Run(new Form1());
         }
     }

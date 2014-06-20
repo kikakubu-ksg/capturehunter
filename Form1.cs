@@ -8,11 +8,16 @@ using System.Text;
 using System.Windows.Forms;
 using System.Threading;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization.Json;
+using System.IO;
 
 namespace capturehunter
 {
     public partial class Form1 : Form
     {
+        //private const string SCRIPTNAME_JQUERY = "jquery-1.11.1.min.js";
+        //private const string SCRIPTNAME_GALLERIFFIC = "jquery.galleriffic.js";
+
         private const int SRCCOPY = 13369376;
         private const int CAPTUREBLT = 1073741824;
 
@@ -54,28 +59,30 @@ namespace capturehunter
 
         public Version VersionInstanse; // バージョン情報フォーム
         //public Setting SettingInstanse; // 設定フォーム
-        public Thread th = null;        // 本スレ取得スレッド
-        public Thread th_h = null;      // 避難所スレ取得スレッド
-        static readonly object syncObject = new object(); // 同期オブジェクト
+        //public Thread th = null;        // 本スレ取得スレッド
+        //public Thread th_h = null;      // 避難所スレ取得スレッド
+        //static readonly object syncObject = new object(); // 同期オブジェクト
 
-        public Boolean boolStartFlag;   // 追跡開始フラグ
-        public Boolean boolResExist;    // レス存在フラグ
-        public Int64 timersec = 0;      // 経過時間
-        public Int64 basetime = 0;      // 基準時刻
-        public Int64 timerdiff = 0;     // タイマー差分
+        public Boolean boolStartFlag;   // 開始フラグ
+        //public Boolean boolResExist;    // レス存在フラグ
+        //public Int64 timersec = 0;      // 経過時間
+        //public Int64 basetime = 0;      // 基準時刻
+        //public Int64 timerdiff = 0;     // タイマー差分
         public int httptimersec = 0;    // データ取得処理クロック
 
-        public Int32 resnum = 0;        // 読み込み済みレス数
-        public Int32 resnum_h = 0;      // 読み込み済みレス数（避難所）
-        public Boolean boolThreadDup = false;    //スレッド重複防止
-        public Boolean boolThreadDup_h = false;  //スレッド重複防止（避難所）
+        //public Int32 resnum = 0;        // 読み込み済みレス数
+        //public Int32 resnum_h = 0;      // 読み込み済みレス数（避難所）
+        //public Boolean boolThreadDup = false;    //スレッド重複防止
+        //public Boolean boolThreadDup_h = false;  //スレッド重複防止（避難所）
+
+        public AreaCapture AC;
 
         //OpenFileDialogクラスのインスタンスを作成
         OpenFileDialog ofd = new OpenFileDialog();
 
 
         // タブ色用 
-        public Boolean boolResAdded = false;     // 新着フラグ
+        //public Boolean boolResAdded = false;     // 新着フラグ
 
         // default font（戻し用）
         public System.Drawing.Font basefont;
@@ -88,6 +95,7 @@ namespace capturehunter
         private void Form1_Load(object sender, EventArgs e)
         {
             // 初期設定
+            AC = new AreaCapture(this);
 
             // フォーム作成
             this.VersionInstanse = new Version();
@@ -109,6 +117,11 @@ namespace capturehunter
             this.textBox_height.Text = Properties.Settings.Default.height;
             this.textBox_second.Text = Properties.Settings.Default.second;
 
+            //AC.Top = Int32.Parse(this.textBox_Y.Text);
+            //AC.Left = Int32.Parse(this.textBox_X.Text);
+            AC.Width = Int32.Parse(this.textBox_width.Text);
+            AC.Height = Int32.Parse(this.textBox_height.Text);
+
             //はじめのファイル名を指定する
             //はじめに「ファイル名」で表示される文字列を指定する
             //ofd.FileName = "default.html";
@@ -128,7 +141,7 @@ namespace capturehunter
 
             this.button_start.Text = "連キャプ\r\n開始";
 
-            timer1.Interval = 1000;
+            //timer1.Interval = 1000;
 
         }
 
@@ -225,7 +238,7 @@ namespace capturehunter
                 Properties.Settings.Default.Save();
 
                 this.timer1.Stop();
-                if (th != null) { th.Abort(); th = null; }
+                //if (th != null) { th.Abort(); th = null; }
             }
             catch (Exception ex)
             {
@@ -235,7 +248,12 @@ namespace capturehunter
 
         private void button_capture_Click(object sender, EventArgs e)
         {
-            if (!error_check()) { 
+            myCapture();
+        }
+
+        private void myCapture() {
+            if (!error_check())
+            {
                 return;
             }
 
@@ -244,9 +262,6 @@ namespace capturehunter
             Int32 Y = Int32.Parse(this.textBox_Y.Text);
             Int32 width = Int32.Parse(this.textBox_width.Text);
             Int32 height = Int32.Parse(this.textBox_height.Text);
-
-            // キャプチャロジック
-            Bitmap bmp = CaptureScreen(X,Y,width,height);
 
             // 保存処理
             // フォルダ取得
@@ -267,23 +282,47 @@ namespace capturehunter
 
             // 現在時刻取得
             DateTime dt = System.DateTime.Now;
-            string fname = stParentName + "\\capture\\" + dt.ToString("yyyyMMdd-HHmmss-ffffff") + ".jpg";
-            bmp.Save(fname, System.Drawing.Imaging.ImageFormat.Jpeg);
-            bmp.Dispose();
+            string dirname = stParentName + "\\capture";
+            string fname = dirname + "\\" + dt.ToString("yyyyMMdd-HHmmss-ffffff") + ".jpg";
+
+            // キャプチャロジック
+            Bitmap bmp = CaptureScreen(X, Y, width, height); ;
+            try
+            {
+                bmp.Save(fname, System.Drawing.Imaging.ImageFormat.Jpeg);
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("画像の保存に失敗しました。\r\n" + ex.Message);
+                return;
+            }
+            finally { bmp.Dispose(); }
 
             // 埋め込み情報作成
             // 全ファイルの情報取得
+            string[] capture = System.IO.Directory.GetFiles(dirname, "*.jpg", System.IO.SearchOption.AllDirectories);
+            Array.Sort(capture);
+            Array.Reverse(capture);
 
+            StringBuilder sb = new StringBuilder("");
+            sb.Append("capture=[");
 
+            for (int i = 0; i < capture.Length; i++)
+            {
+                string str = Path.GetFileName(capture[i]);
+                sb.Append("'" + str.Substring(0, 22) + "',");
+            }
 
-            // 埋め込み情報更新
+            sb.Append("];");
 
+            System.IO.File.WriteAllText(this.textBox_path.Text, sb.ToString());
+            //Console.WriteLine(sb.ToString());
         }
-
 
         private Boolean error_check() {
             if (this.textBox_path.Text == "") { MessageBox.Show("ファイルが指定されていません。"); return false; }
-            if (!System.IO.File.Exists(this.textBox_path.Text)) { MessageBox.Show("ファイルがありません。"); return false; }
+            //if (!System.IO.File.Exists(this.textBox_path.Text)) { MessageBox.Show("ファイルがありません。"); return false; }
             return true;
         }
 
@@ -340,6 +379,41 @@ namespace capturehunter
             ReleaseDC(hWnd, winDC);
 
             return bmp;
+        }
+
+        private void button_area_Click(object sender, EventArgs e)
+        {
+            
+            AC.Show();
+            AC.Location = new Point(Int32.Parse(this.textBox_X.Text), Int32.Parse(this.textBox_Y.Text));
+        }
+
+        private void button_start_Click(object sender, EventArgs e)
+        {
+            if (boolStartFlag)
+            {
+                timer1.Stop();
+                this.button_start.Text = "連キャプ\r\n開始";
+                this.button_start.BackColor = SystemColors.Control;
+            }
+            else
+            {
+                timer1.Interval = 1000;
+                timer1.Start();
+                this.button_start.Text = "連キャプ\r\n停止";
+                this.button_start.BackColor = Color.Red;
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (this.httptimersec % Int32.Parse(this.textBox_second.Text) == 0 && boolStartFlag)
+            {
+
+                myCapture();
+
+            }
+            httptimersec++;
         }
 
     }
