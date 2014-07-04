@@ -410,12 +410,14 @@ namespace capturehunter
         {
             if (boolStartFlag)
             {
+                boolStartFlag = false;
                 timer1.Stop();
                 this.button_start.Text = "連キャプ\r\n開始";
                 this.button_start.BackColor = SystemColors.Control;
             }
             else
             {
+                boolStartFlag = true;
                 timer1.Interval = 1000;
                 timer1.Start();
                 this.button_start.Text = "連キャプ\r\n停止";
