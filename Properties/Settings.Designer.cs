@@ -94,5 +94,17 @@ namespace capturehunter.Properties {
                 this["second"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public string sheets {
+            get {
+                return ((string)(this["sheets"]));
+            }
+            set {
+                this["sheets"] = value;
+            }
+        }
     }
 }

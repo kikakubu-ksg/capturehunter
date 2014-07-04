@@ -20,5 +20,8 @@
     <Setting Name="second" Type="System.String" Scope="User">
       <Value Profile="(Default)">60</Value>
     </Setting>
+    <Setting Name="sheets" Type="System.String" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

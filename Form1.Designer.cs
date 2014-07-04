@@ -52,10 +52,15 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.バージョンToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.textBox_sheets = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.groupBox_file.SuspendLayout();
             this.groupBox_size.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox_path
@@ -201,7 +206,7 @@
             this.groupBox1.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.groupBox1.Location = new System.Drawing.Point(13, 188);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(336, 49);
+            this.groupBox1.Size = new System.Drawing.Size(154, 49);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "連続キャプチャ";
@@ -266,12 +271,52 @@
             this.バージョンToolStripMenuItem.Text = "バージョン";
             this.バージョンToolStripMenuItem.Click += new System.EventHandler(this.バージョンToolStripMenuItem_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label7);
+            this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.textBox_sheets);
+            this.groupBox2.Font = new System.Drawing.Font("メイリオ", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.groupBox2.Location = new System.Drawing.Point(173, 188);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(176, 49);
+            this.groupBox2.TabIndex = 6;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "JSONデータ";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(120, 22);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(32, 18);
+            this.label6.TabIndex = 1;
+            this.label6.Text = "枚分";
+            // 
+            // textBox_sheets
+            // 
+            this.textBox_sheets.Location = new System.Drawing.Point(44, 18);
+            this.textBox_sheets.Name = "textBox_sheets";
+            this.textBox_sheets.Size = new System.Drawing.Size(63, 25);
+            this.textBox_sheets.TabIndex = 0;
+            this.textBox_sheets.Validating += new System.ComponentModel.CancelEventHandler(this.textBox_sheets_Validating);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 22);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(32, 18);
+            this.label7.TabIndex = 2;
+            this.label7.Text = "最大";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(481, 249);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.button_capture);
             this.Controls.Add(this.button_start);
             this.Controls.Add(this.groupBox1);
@@ -293,6 +338,8 @@
             this.groupBox1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -322,6 +369,10 @@
         internal System.Windows.Forms.TextBox textBox_X;
         internal System.Windows.Forms.TextBox textBox_height;
         internal System.Windows.Forms.TextBox textBox_width;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox textBox_sheets;
     }
 }
 

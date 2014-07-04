@@ -116,6 +116,7 @@ namespace capturehunter
             this.textBox_width.Text = Properties.Settings.Default.width;
             this.textBox_height.Text = Properties.Settings.Default.height;
             this.textBox_second.Text = Properties.Settings.Default.second;
+            this.textBox_sheets.Text = Properties.Settings.Default.sheets;
 
             //AC.Top = Int32.Parse(this.textBox_Y.Text);
             //AC.Left = Int32.Parse(this.textBox_X.Text);
@@ -211,6 +212,21 @@ namespace capturehunter
             }
         }
 
+        private void textBox_sheets_Validating(object sender, CancelEventArgs e)
+        {
+            int i;
+            if (!Int32.TryParse(((TextBox)sender).Text, out i))
+            {
+                MessageBox.Show("数字を入力してください。");
+                e.Cancel = true;
+            }
+            if (i <= 0)
+            {
+                MessageBox.Show("指定された範囲が不正です。");
+                e.Cancel = true;
+            }
+        }
+
         private void バージョンToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.VersionInstanse.Show();
@@ -235,6 +251,7 @@ namespace capturehunter
                 Properties.Settings.Default.width = this.textBox_width.Text;
                 Properties.Settings.Default.height = this.textBox_height.Text;
                 Properties.Settings.Default.second = this.textBox_second.Text;
+                Properties.Settings.Default.sheets = this.textBox_sheets.Text;
                 Properties.Settings.Default.Save();
 
                 this.timer1.Stop();
@@ -308,7 +325,8 @@ namespace capturehunter
             StringBuilder sb = new StringBuilder("");
             sb.Append("capture=[");
 
-            for (int i = 0; i < capture.Length; i++)
+            //for (int i = 0; i < capture.Length; i++)
+            for (int i = 0; i < int.Parse(this.textBox_sheets.Text); i++)
             {
                 string str = Path.GetFileName(capture[i]);
                 sb.Append("'" + str.Substring(0, 22) + "',");
@@ -415,6 +433,8 @@ namespace capturehunter
             }
             httptimersec++;
         }
+
+        
 
     }
 }
